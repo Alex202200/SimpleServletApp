@@ -3,7 +3,6 @@ package alex.mvc.controller;
 
 import java.sql.*;
 
-import static alex.mvc.controller.DBConnection.getConnection;
 
 public class DBConnection {
     private static final String URL = "jdbc:postgresql://192.168.1.87:5432/postgres";
@@ -12,30 +11,29 @@ public class DBConnection {
 
 
     public static void main(String[] args) {
-        testConnection();
+        createTable();
+    }
+
+    public static void createTable() {
+        String sql = "CREATE TABLE users ("
+                + "id SERIAL PRIMARY KEY,"
+                + "first_name VARCHAR(50),"
+                + "last_name VARCHAR(50),"
+                + "age INTEGER"
+                + ")";
+
+        try (Connection connection = getConnection();
+             Statement statement = connection.createStatement()) {
+            statement.execute(sql);
+            System.out.println("Таблица 'users' успешно создана.");
+        } catch (SQLException e) {
+            System.out.println("Ошибка при создании таблицы: " + e.getMessage());
+        }
     }
 
     public static Connection  getConnection () throws SQLException {
         return DriverManager.getConnection(URL, USER, PASSWORD);
     }
 
-
-    public static boolean testConnection () {
-        try (Connection connection = getConnection();
-             Statement statement = connection.createStatement()) {
-
-            ResultSet resultSet = statement.executeQuery("SELECT 1");
-            if (resultSet.next()) {
-                System.out.println("Connection to the database established successfully.");
-                return true;
-            } else {
-                System.out.println("Failed to establish connection to the database.");
-                return false;
-            }
-        } catch (SQLException e) {
-            System.out.println("Error while testing the database connection: " + e.getMessage());
-            return false;
-        }
-    }
 
 }
