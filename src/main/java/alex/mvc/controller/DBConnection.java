@@ -25,7 +25,7 @@ public class DBConnection {
         try (Connection connection = getConnection();
              Statement statement = connection.createStatement()) {
             statement.execute(sql);
-            System.out.println("Таблица 'users' успешно создана.");
+            System.out.println("Table 'users' was created");
         } catch (SQLException e) {
             System.out.println("Ошибка при создании таблицы: " + e.getMessage());
         }
